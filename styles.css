@@ -60,7 +60,7 @@ nav ul li a:hover {
 }
 
 /* Hero Section */
-#hero {
+#home {
     background: #3498db;
     color: #fff;
     text-align: center;
@@ -68,12 +68,12 @@ nav ul li a:hover {
     margin-top: 60px; /* Offset for fixed header */
 }
 
-#hero h2 {
+#home h2 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
 }
 
-#hero p {
+#home p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
 }
