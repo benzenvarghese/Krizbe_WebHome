@@ -49,7 +49,7 @@
 
   <script>
     let questions = [];
-    let userAnswers = [];
+    let userAnswers = Array(100).fill('');
     let currentPage = 0;
     const questionsPerPage = 5;
 
@@ -67,23 +67,30 @@
       for (let i = start; i < end; i++) {
         const q = questions[i];
         let html = `<div class="question"><p><strong>Q${i + 1}:</strong> ${q.question}</p><div class='answers'>`;
-        html += `<label><input type="radio" name="q${i}" value="0"> ${q.option_1}</label>`;
-        html += `<label><input type="radio" name="q${i}" value="1"> ${q.option_2}</label>`;
-        html += `<label><input type="radio" name="q${i}" value="2"> ${q.option_3}</label>`;
+        html += `<label><input type="radio" name="q${i}" value="0" ${userAnswers[i] === "0" ? "checked" : ""}> ${q.option_1}</label>`;
+        html += `<label><input type="radio" name="q${i}" value="1" ${userAnswers[i] === "1" ? "checked" : ""}> ${q.option_2}</label>`;
+        html += `<label><input type="radio" name="q${i}" value="2" ${userAnswers[i] === "2" ? "checked" : ""}> ${q.option_3}</label>`;
         html += `</div><button onclick="checkAnswer(${i})">Check</button><p class="result" id="result${i}"></p></div>`;
         container.innerHTML += html;
       }
       updateProgressBar();
     }
 
-    function checkAnswer(index) {
+    function storeAnswer(index) {
       const radios = document.getElementsByName('q' + index);
-      let selected;
       for (const r of radios) {
-        if (r.checked) selected = parseInt(r.value);
+        if (r.checked) {
+          userAnswers[index] = r.value;
+          break;
+        }
       }
+    }
+
+    function checkAnswer(index) {
+      storeAnswer(index);
       const result = document.getElementById('result' + index);
-      if (selected === parseInt(questions[index].correct_index)) {
+      const selected = userAnswers[index];
+      if (selected === questions[index].correct_index) {
         result.innerHTML = "Correct!\n" + questions[index].explanation;
         result.style.color = "green";
       } else {
@@ -94,21 +101,15 @@
     }
 
     function submitQuiz() {
-      userAnswers = [];
-      let correctCount = 0;
-      for (let i = 0; i < questions.length; i++) {
-        const radios = document.getElementsByName('q' + i);
-        let selected = '';
-        for (const r of radios) {
-          if (r.checked) selected = r.value;
-        }
-        userAnswers.push(selected);
-        if (selected === questions[i].correct_index) correctCount++;
+      for (let i = currentPage * questionsPerPage; i < Math.min((currentPage + 1) * questionsPerPage, questions.length); i++) {
+        storeAnswer(i);
       }
 
+      let correctCount = 0;
       const summary = document.getElementById('summaryTable');
       summary.innerHTML = `<tr><th>#</th><th>Selected</th><th>Correct</th><th>Result</th></tr>`;
       userAnswers.forEach((ans, i) => {
+        if (i >= questions.length) return;
         const correct = questions[i].correct_index;
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -118,6 +119,7 @@
           <td class="${ans === correct ? 'correct' : 'incorrect'}">${ans === correct ? '✔' : '✘'}</td>
         `;
         summary.appendChild(row);
+        if (ans === correct) correctCount++;
       });
 
       const finalText = document.getElementById('finalResult');
@@ -129,6 +131,9 @@
     }
 
     function nextPage() {
+      for (let i = currentPage * questionsPerPage; i < Math.min((currentPage + 1) * questionsPerPage, questions.length); i++) {
+        storeAnswer(i);
+      }
       if ((currentPage + 1) * questionsPerPage < questions.length) {
         currentPage++;
         renderPage(currentPage);
@@ -136,6 +141,9 @@
     }
 
     function prevPage() {
+      for (let i = currentPage * questionsPerPage; i < Math.min((currentPage + 1) * questionsPerPage, questions.length); i++) {
+        storeAnswer(i);
+      }
       if (currentPage > 0) {
         currentPage--;
         renderPage(currentPage);
