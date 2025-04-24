@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Salesforce AI Associate Quiz</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     body { font-family: Arial; margin: 0; background: #f5f5f5; }
     .start-screen, .quiz-screen, .summary-screen { display: none; padding: 20px; max-width: 960px; margin: auto; }
@@ -147,21 +148,15 @@
     }
 
     function loadCSV() {
-      fetch('Salesforce_AI_Quiz_Questions.csv')
-        .then(response => response.text())
-        .then(data => {
-          const lines = data.split('\n');
-          const headers = lines[0].split(',');
-          for (let i = 1; i < lines.length; i++) {
-            const row = lines[i].split(',');
-            if (row.length >= 6) {
-              let q = {};
-              headers.forEach((h, j) => q[h.trim()] = row[j]?.trim().replaceAll('"', '').replaceAll('\\n', '\n'));
-              questions.push(q);
-            }
-          }
+      Papa.parse("Salesforce_AI_Quiz_Questions.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          questions = results.data;
           renderPage(currentPage);
-        });
+        }
+      });
     }
   </script>
 </body>
