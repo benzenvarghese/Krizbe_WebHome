@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Salesforce AI Associate Quiz</title>
+  <style>
+    body { font-family: Arial; margin: 0; background: #f5f5f5; }
+    .start-screen, .quiz-screen { display: none; padding: 20px; max-width: 800px; margin: auto; }
+    .visible { display: block; }
+    .question { background: #fff; padding: 15px; margin: 10px 0; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .answers label { display: block; margin: 5px 0; }
+    .result { font-weight: bold; margin-top: 10px; }
+    .navigation, .submit-section { text-align: center; margin-top: 20px; }
+    button { padding: 10px 20px; font-size: 16px; background: #0070d2; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #005bb5; }
+    .progress { height: 20px; background: #ddd; border-radius: 10px; margin-top: 10px; }
+    .progress-bar { height: 100%; background: #0070d2; width: 0%; border-radius: 10px; transition: width 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="start-screen visible" id="startScreen">
+    <h1>Welcome to the Salesforce AI Associate Quiz</h1>
+    <p>This quiz will test your knowledge on AI concepts relevant to Salesforce.</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+  <div class="quiz-screen" id="quizScreen">
+    <div id="quiz-container"></div>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="navigation">
+      <button onclick="prevPage()">Previous</button>
+      <button onclick="nextPage()">Next</button>
+    </div>
+    <div class="submit-section">
+      <button onclick="showAllAnswers()">Submit All Answers</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let currentPage = 0;
+    const questionsPerPage = 5;
+
+    function startQuiz() {
+      document.getElementById('startScreen').classList.remove('visible');
+      document.getElementById('quizScreen').classList.add('visible');
+      loadCSV();
+    }
+
+    function renderPage(page) {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = '';
+      const start = page * questionsPerPage;
+      const end = Math.min(start + questionsPerPage, questions.length);
+      for (let i = start; i < end; i++) {
+        const q = questions[i];
+        let html = `<div class="question"><p><strong>Q${i + 1}:</strong> ${q.question}</p><div class='answers'>`;
+        html += `<label><input type="radio" name="q${i}" value="0"> ${q.option_1}</label>`;
+        html += `<label><input type="radio" name="q${i}" value="1"> ${q.option_2}</label>`;
+        html += `<label><input type="radio" name="q${i}" value="2"> ${q.option_3}</label>`;
+        html += `</div><button onclick="checkAnswer(${i})">Check</button><p class="result" id="result${i}"></p></div>`;
+        container.innerHTML += html;
+      }
+      updateProgressBar();
+    }
+
+    function checkAnswer(index) {
+      const selected = document.querySelector(`input[name='q${index}']:checked`);
+      const result = document.getElementById(`result${index}`);
+      if (!selected) return;
+      const correct = questions[index].correct_index;
+      if (selected.value === correct) {
+        result.innerHTML = 'Correct! ' + questions[index].explanation;
+        result.style.color = 'green';
+      } else {
+        result.innerHTML = 'Incorrect. ' + questions[index].explanation;
+        result.style.color = 'red';
+      }
+    }
+
+    function nextPage() {
+      if ((currentPage + 1) * questionsPerPage < questions.length) {
+        currentPage++;
+        renderPage(currentPage);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        renderPage(currentPage);
+      }
+    }
+
+    function showAllAnswers() {
+      for (let i = 0; i < questions.length; i++) checkAnswer(i);
+    }
+
+    function updateProgressBar() {
+      const percent = Math.min(100, ((currentPage + 1) * questionsPerPage / questions.length) * 100);
+      document.getElementById('progressBar').style.width = percent + '%';
+    }
+
+    function loadCSV() {
+      fetch('Salesforce_AI_Quiz_Questions.csv')
+        .then(response => response.text())
+        .then(data => {
+          const lines = data.split('\n');
+          const headers = lines[0].split(',');
+          for (let i = 1; i < lines.length; i++) {
+            const row = lines[i].split(',');
+            if (row.length >= 6) {
+              let q = {};
+              headers.forEach((h, j) => q[h.trim()] = row[j]?.trim());
+              questions.push(q);
+            }
+          }
+          renderPage(currentPage);
+        });
+    }
+  </script>
+</body>
+</html>
