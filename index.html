@@ -1,12 +1,52 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Krizbe Web Home</title>
+  <title>Krizbe Exam Practice Portal</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #e6f2ff; color: #003366; }
+    header { background: #0070d2; color: white; padding: 20px; text-align: center; }
+    h1 { margin: 0; font-size: 2.5em; }
+    nav { background: #005bb5; padding: 10px 20px; color: white; }
+    .container { padding: 40px 20px; max-width: 960px; margin: auto; }
+    .category { margin: 20px 0; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 20px; }
+    .category h2 { color: #0070d2; }
+    ul.exam-list { list-style-type: none; padding-left: 0; }
+    ul.exam-list li { margin: 10px 0; }
+    ul.exam-list li a { text-decoration: none; color: #0070d2; font-weight: bold; font-size: 1.1em; }
+    ul.exam-list li a:hover { color: #009688; text-decoration: underline; }
+    footer { text-align: center; margin-top: 50px; color: #666; font-size: 0.9em; padding-bottom: 20px; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to Krizbe.com</h1>
-  <p><a href="Salesforce_AI_Quiz/index.html" target="_blank">Take the Salesforce AI Associate Quiz</a></p>
+  <header>
+    <h1>Krizbe Exam Practice Portal</h1>
+    <p>Your one-stop solution for online exam preparation</p>
+  </header>
+
+  <nav>
+    📚 Browse Practice Exams by Category
+  </nav>
+
+  <div class="container">
+    <div class="category">
+      <h2>Salesforce</h2>
+      <ul class="exam-list">
+        <li><a href="Salesforce_AI_Quiz/index.html" target="_blank">Salesforce - AI Associate Exam</a></li>
+      </ul>
+    </div>
+
+    <!-- Future categories can go here -->
+    <!-- <div class="category">
+      <h2>AWS</h2>
+      <ul class="exam-list">
+        <li><a href="#">AWS Certified Solutions Architect</a></li>
+      </ul>
+    </div> -->
+  </div>
+
+  <footer>
+    &copy; 2025 Krizbe.com | Crafted for learners by learners
+  </footer>
 </body>
 </html>
