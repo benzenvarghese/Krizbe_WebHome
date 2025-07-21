@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mock Tests - Krizbe</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .category { margin: 20px 0; }
+        .category h2 { cursor: pointer; background-color: #eee; padding: 10px; border-radius: 5px; }
+        .test-list { display: none; margin-left: 20px; }
+        .test-list a { display: block; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mock Test Categories</h1>
+    </header>
+    <main>
+        <div class="category" onclick="toggle('salesforce')">
+            <h2>Salesforce</h2>
+            <div id="salesforce" class="test-list">
+                <a href="/Salesforce_AI_Quiz/index.html">Salesforce AI Associate</a>
+            </div>
+        </div>
+        <div class="category" onclick="toggle('siebel')">
+            <h2>Siebel</h2>
+            <div id="siebel" class="test-list">
+                <a href="#">Siebel Basic Quiz (Coming Soon)</a>
+            </div>
+        </div>
+        <div class="category" onclick="toggle('python')">
+            <h2>Python</h2>
+            <div id="python" class="test-list">
+                <a href="#">Python Fundamentals (Coming Soon)</a>
+            </div>
+        </div>
+    </main>
+    
+<footer>
+    <p>Powered by Krizbe.com</p>
+    <p><a href="mailto:techsupport@krizbe.com?subject=Support%20Request">📬 Contact Us</a></p>
+</footer>
+
+    <p><a href="index.html">← Back to Home</a></p>
+    <script>
+        function toggle(id) {
+            var el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
